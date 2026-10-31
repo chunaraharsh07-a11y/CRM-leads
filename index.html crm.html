@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f766e">
+<title>LeadFlow CRM</title>
+<style>
+:root{--bg:#f3f6f5;--card:#fff;--side:#0d2b2a;--tx:#14231f;--mu:#667873;--bd:#e0e8e5;--pri:#0f766e;--pri2:#14b8a6;--sh:0 1px 2px rgba(13,43,42,.06),0 8px 24px rgba(13,43,42,.05);--inp:#f8fbfa}
+:root[data-theme=dark]{--bg:#0a1514;--card:#112220;--side:#071010;--tx:#e6f1ee;--mu:#8aa39d;--bd:#1f3532;--pri:#14b8a6;--pri2:#2dd4bf;--sh:0 1px 2px rgba(0,0,0,.4);--inp:#0d1b19}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.side{position:fixed;inset:0 auto 0 0;width:248px;background:var(--side);color:#cfe3de;display:flex;flex-direction:column;padding:20px 14px;z-index:30;transition:transform .25s}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;color:#fff;padding:4px 8px 22px}
+.logo i{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--pri2),#0f766e);display:grid;place-items:center;font-style:normal}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;align-items:center;gap:12px;background:none;border:0;color:inherit;padding:11px 12px;border-radius:10px;text-align:left;font-weight:500}
+.nav button:hover{background:rgba(255,255,255,.07)}
+.nav button.on{background:var(--pri);color:#fff}
+.nav .bd{margin-left:auto;background:#ef4444;color:#fff;border-radius:99px;font-size:12px;padding:0 8px}
+.sfoot{margin-top:auto;font-size:12px;opacity:.6;padding:8px}
+.main{margin-left:248px;min-height:100vh}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;align-items:center;gap:10px;padding:14px 24px;border-bottom:1px solid var(--bd)}
+.top h1{font-size:20px;flex:1}
+.ham{display:none}
+.wrap{padding:24px;max-width:1200px}
+.btn{border:1px solid var(--bd);background:var(--card);padding:9px 14px;border-radius:10px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--pri)}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.d{background:#dc2626;border-color:#dc2626;color:#fff}
+.btn.s{padding:6px 10px;font-size:13px}
+.grid{display:grid;gap:16px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;box-shadow:var(--sh);padding:18px}
+.stat b{display:block;font-size:30px;line-height:1.1;margin-top:6px}
+.stat span{color:var(--mu);font-size:13px}
+.stat.ov b{color:#dc2626}
+.two{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+h3{font-size:15px;margin-bottom:14px}
+.donut{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ring{width:140px;height:140px;border-radius:50%;display:grid;place-items:center}
+.ring div{width:90px;height:90px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center;font-size:12px;color:var(--mu)}
+.ring b{display:block;font-size:22px;color:var(--tx)}
+.leg{display:grid;gap:6px;font-size:13px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13px}
+.bar span:first-child{width:92px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar .tr{flex:1;height:10px;background:var(--inp);border-radius:9px;overflow:hidden;border:1px solid var(--bd)}
+.bar .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));border-radius:9px}
+.cols{display:flex;align-items:flex-end;gap:10px;height:140px}
+.cols div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:12px;color:var(--mu)}
+.cols i{width:100%;max-width:38px;background:linear-gradient(var(--pri2),var(--pri));border-radius:7px 7px 0 0;min-height:3px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tools input,.tools select,.f input,.f select,.f textarea{background:var(--inp);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;outline:0}
+.tools input:focus,.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--pri)}
+.tools input{flex:1;min-width:180px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--bd);white-space:nowrap}
+th{font-size:13px;color:var(--mu);font-weight:600}
+td small{display:block;color:var(--mu)}
+.pill{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;display:inline-block}
+.st-New{background:#dbeafe;color:#1d4ed8}.st-Contacted{background:#ede9fe;color:#6d28d9}.st-Interested{background:#fef3c7;color:#b45309}.st-Follow-up{background:#ffedd5;color:#c2410c}.st-Converted{background:#dcfce7;color:#15803d}.st-Lost{background:#fee2e2;color:#b91c1c}
+.late{color:#dc2626;font-weight:600}.today{color:#d97706;font-weight:600}
+.act{display:flex;gap:6px}
+.act a,.act button{width:34px;height:34px;border-radius:9px;border:1px solid var(--bd);background:var(--card);display:grid;place-items:center;text-decoration:none;font-size:15px}
+.act a.wa{background:#25d366;border-color:#25d366}
+.act a.ca{background:var(--pri);border-color:var(--pri)}
+.empty{text-align:center;padding:40px 10px;color:var(--mu)}
+.fu{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.fu:last-child{border:0}
+.ov{position:fixed;inset:0;background:rgba(0,10,8,.55);display:none;align-items:center;justify-content:center;padding:14px;z-index:50}
+.ov.show{display:flex}
+.modal{background:var(--card);border-radius:18px;width:100%;max-width:560px;max-height:94vh;overflow:auto;padding:22px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f label{display:grid;gap:4px;font-size:13px;color:var(--mu);font-weight:600}
+.f .full{grid-column:1/-1}
+.mf{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(90px);background:#0d2b2a;color:#fff;padding:11px 18px;border-radius:12px;transition:.3s;z-index:90}
+.toast.show{transform:translateX(-50%)}
+.bk{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:25}
+@media(max-width:860px){
+.side{transform:translateX(-100%)}.side.open{transform:none}.side.open~.bk{display:block}
+.main{margin-left:0}.ham{display:inline-flex}.wrap{padding:14px}.top{padding:12px 14px}
+.f{grid-template-columns:1fr}
+.hide-m{display:none}
+}
+</style>
+</head>
+<body>
+<aside class="side" id="side">
+ <div class="logo"><i>⚡</i>LeadFlow CRM</div>
+ <nav class="nav" id="nav">
+  <button data-v="dashboard">📊 Dashboard</button>
+  <button data-v="leads">👥 All leads</button>
+  <button data-v="followups">⏰ Follow-ups <span class="bd" id="ovb" hidden></span></button>
+  <button data-v="data">🗂️ Import &amp; export</button>
+ </nav>
+ <div class="sfoot">Data is saved on this device only.</div>
+</aside>
+<div class="bk" id="bk"></div>
+<div class="main">
+ <header class="top">
+  <button class="btn ham" id="ham" aria-label="Menu">☰</button>
+  <h1 id="title">Dashboard</h1>
+  <button class="btn" id="theme" aria-label="Toggle theme">🌙</button>
+  <button class="btn p" id="addBtn">＋ Add lead</button>
+ </header>
+ <div class="wrap" id="view"></div>
+</div>
+
+<div class="ov" id="formOv"><form class="modal" id="form">
+ <h3 id="fTitle" style="font-size:18px">Add lead</h3>
+ <div class="f">
+  <label>Full name *<input name="name" required maxlength="80"></label>
+  <label>Phone *<input name="phone" type="tel" required placeholder="e.g. 9876543210"></label>
+  <label>Email<input name="email" type="email"></label>
+  <label>Company<input name="company"></label>
+  <label>Lead source<select name="source"></select></label>
+  <label>Status<select name="status"></select></label>
+  <label class="full">Follow-up date<input name="followup" type="date"></label>
+  <label class="full">Notes<textarea name="notes" rows="3"></textarea></label>
+ </div>
+ <div class="mf"><button type="button" class="btn" id="cancel">Cancel</button><button class="btn p" type="submit">Save lead</button></div>
+</form></div>
+
+<div class="ov" id="confOv"><div class="modal" style="max-width:400px">
+ <h3 style="font-size:18px">Delete this lead?</h3>
+ <p id="confTx" style="color:var(--mu)"></p>
+ <div class="mf"><button class="btn" id="confNo">Keep lead</button><button class="btn d" id="confYes">Delete lead</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+const STATUS=["New","Contacted","Interested","Follow-up","Converted","Lost"];
+const COLORS={New:"#3b82f6",Contacted:"#8b5cf6",Interested:"#f59e0b","Follow-up":"#f97316",Converted:"#22c55e",Lost:"#ef4444"};
+const SOURCES=["Website","WhatsApp","Facebook","Instagram","Google Ads","Referral","Walk-in","Cold call","Other"];
+const KEY="leadflow_leads_v1",TK="leadflow_theme",CK="leadflow_cc";
+const $=s=>document.querySelector(s);
+let leads=[],view="dashboard",editId=null,delId=null,q="",fs="",fsrc="",fu="";
+
+function load(){try{leads=JSON.parse(localStorage.getItem(KEY))||[]}catch(e){leads=[]}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(leads))}catch(e){toast("Storage full or blocked. Export your data.")}}
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const open=l=>l.status!=="Converted"&&l.status!=="Lost";
+const isLate=l=>l.followup&&open(l)&&l.followup<todayStr();
+const isToday=l=>l.followup&&open(l)&&l.followup===todayStr();
+function fmt(d){if(!d)return"—";const[y,m,x]=d.split("-");return new Date(y,m-1,x).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2400)}
+function cc(){return localStorage.getItem(CK)||"91"}
+function waLink(l){let n=String(l.phone).replace(/\D/g,"");if(String(l.phone).trim().startsWith("+")){}else{n=n.replace(/^0+/,"");if(n.length<=10)n=cc()+n}
+ return"https://wa.me/"+n+"?text="+encodeURIComponent("Hi "+l.name.split(" ")[0]+", ")}
+const telLink=l=>"tel:"+String(l.phone).replace(/[^\d+]/g,"");
+
+function actions(l){return`<div class="act"><a class="wa" href="${waLink(l)}" target="_blank" rel="noopener" title="WhatsApp">💬</a><a class="ca" href="${telLink(l)}" title="Call">📞</a><button data-edit="${l.id}" title="Edit">✏️</button><button data-del="${l.id}" title="Delete">🗑️</button></div>`}
+const pill=s=>`<span class="pill st-${s}">${s}</span>`;
+function fuText(l){if(!l.followup)return"—";const c=isLate(l)?"late":isToday(l)?"today":"";return`<span class="${c}">${fmt(l.followup)}${isLate(l)?" · Overdue":isToday(l)?" · Today":""}</span>`}
+
+function dashboard(){
+ const c={};STATUS.forEach(s=>c[s]=0);leads.forEach(l=>c[l.status]++);
+ const T=leads.length,od=leads.filter(isLate).length,td=leads.filter(isToday).length;
+ const rate=T?Math.round(c.Converted/T*100):0;
+ let acc=0;const grad=T?STATUS.map(s=>{const a=acc,b=acc+c[s]/T*100;acc=b;return`${COLORS[s]} ${a}% ${b}%`}).join(","):"var(--bd) 0 100%";
+ const src={};leads.forEach(l=>src[l.source||"Other"]=(src[l.source||"Other"]||0)+1);
+ const sl=Object.entries(src).sort((a,b)=>b[1]-a[1]).slice(0,6),mx=sl.length?sl[0][1]:1;
+ const months=[];for(let i=5;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months.push({k:d.getFullYear()+"-"+d.getMonth(),n:d.toLocaleDateString(undefined,{month:"short"}),v:0})}
+ leads.forEach(l=>{const d=new Date(l.created);const m=months.find(x=>x.k===d.getFullYear()+"-"+d.getMonth());if(m)m.v++});
+ const mm=Math.max(1,...months.map(m=>m.v));
+ const recent=[...leads].sort((a,b)=>b.created.localeCompare(a.created)).slice(0,5);
+ return`<div class="grid stats">
+ <div class="card stat"><span>Total leads</span><b>${T}</b></div>
+ <div class="card stat"><span>New leads</span><b>${c.New}</b></div>
+ <div class="card stat"><span>Interested</span><b>${c.Interested}</b></div>
+ <div class="card stat"><span>Converted</span><b>${c.Converted}</b></div>
+ <div class="card stat"><span>Lost</span><b>${c.Lost}</b></div>
+ <div class="card stat ov"><span>Overdue follow-ups</span><b>${od}</b></div></div>
+ <div class="grid two" style="margin-bottom:16px">
+ <div class="card"><h3>Pipeline by status</h3><div class="donut"><div class="ring" style="background:conic-gradient(${grad})"><div><span><b>${rate}%</b>converted</span></div></div>
+ <div class="leg">${STATUS.map(s=>`<span><i class="dot" style="background:${COLORS[s]}"></i>${s}: <b>${c[s]}</b></span>`).join("")}</div></div></div>
+ <div class="card"><h3>Leads added, last 6 months</h3><div class="cols">${months.map(m=>`<div><span>${m.v}</span><i style="height:${m.v/mm*100}%"></i><span>${m.n}</span></div>`).join("")}</div></div></div>
+ <div class="grid two">
+ <div class="card"><h3>Top lead sources</h3>${sl.length?sl.map(([k,v])=>`<div class="bar"><span>${esc(k)}</span><span class="tr"><i style="width:${v/mx*100}%"></i></span><b>${v}</b></div>`).join(""):'<p class="empty">No data yet.</p>'}</div>
+ <div class="card"><h3>Today &amp; recent</h3><p style="margin-bottom:10px;color:var(--mu)">${td} due today · <span class="${od?"late":""}">${od} overdue</span></p>
+ ${recent.length?recent.map(l=>`<div class="fu"><div><b>${esc(l.name)}</b><small style="display:block;color:var(--mu)">${esc(l.company||l.phone)}</small></div>${pill(l.status)}</div>`).join(""):'<p class="empty">Add your first lead to see activity here.</p>'}</div></div>`}
+
+function filtered(){const s=q.toLowerCase();return leads.filter(l=>(!s||[l.name,l.phone,l.email,l.company,l.notes].join(" ").toLowerCase().includes(s))&&(!fs||l.status===fs)&&(!fsrc||l.source===fsrc)&&(!fu||(fu==="overdue"?isLate(l):fu==="today"?isToday(l):!!l.followup&&open(l)&&l.followup>todayStr()))).sort((a,b)=>b.created.localeCompare(a.created))}
+
+function leadsView(){
+ return`<div class="tools"><input id="q" type="search" placeholder="Search name, phone, email, company…" value="${esc(q)}">
+ <select id="fs"><option value="">All statuses</option>${STATUS.map(s=>`<option ${fs===s?"selected":""}>${s}</option>`).join("")}</select>
+ <select id="fsrc"><option value="">All sources</option>${SOURCES.map(s=>`<option ${fsrc===s?"selected":""}>${s}</option>`).join("")}</select>
+ <select id="fu"><option value="">Any follow-up</option><option value="overdue" ${fu==="overdue"?"selected":""}>Overdue</option><option value="today" ${fu==="today"?"selected":""}>Due today</option><option value="upcoming" ${fu==="upcoming"?"selected":""}>Upcoming</option></select></div>
+ <div class="card" style="padding:6px" id="tbl"></div>`}
+function tableHTML(){
+ const L=filtered();
+ if(!L.length)return`<div class="empty">${leads.length?"No leads match your filters.":"No leads yet. Tap “Add lead” to create your first one."}</div>`;
+ return`<div class="tw"><table><thead><tr><th>Lead</th><th class="hide-m">Contact</th><th>Status</th><th>Follow-up</th><th>Actions</th></tr></thead><tbody>${L.map(l=>`<tr><td><b>${esc(l.name)}</b><small>${esc(l.company||"")}${l.source?" · "+esc(l.source):""}</small></td><td class="hide-m">${esc(l.phone)}<small>${esc(l.email||"")}</small></td><td>${pill(l.status)}</td><td>${fuText(l)}</td><td>${actions(l)}</td></tr>`).join("")}</tbody></table></div>`}
+
+function followView(){
+ const L=leads.filter(l=>l.followup&&open(l)).sort((a,b)=>a.followup.localeCompare(b.followup));
+ const g=[["Overdue",L.filter(isLate)],["Due today",L.filter(isToday)],["Upcoming",L.filter(l=>l.followup>todayStr())]];
+ return g.map(([t,a])=>`<div class="card" style="margin-bottom:16px"><h3>${t} (${a.length})</h3>${a.length?a.map(l=>`<div class="fu"><div><b>${esc(l.name)}</b> ${pill(l.status)}<small style="display:block;color:var(--mu)">${fmt(l.followup)} · ${esc(l.phone)}${l.notes?" · "+esc(l.notes.slice(0,60)):""}</small></div>${actions(l)}</div>`).join(""):'<p style="color:var(--mu)">Nothing here.</p>'}</div>`).join("")}
+
+function dataView(){return`<div class="grid two"><div class="card"><h3>Export leads</h3><p style="color:var(--mu);margin-bottom:14px">Download all ${leads.length} leads as a CSV file you can open in Excel or Google Sheets.</p><button class="btn p" id="exp">⬇ Export CSV</button></div>
+ <div class="card"><h3>Import leads</h3><p style="color:var(--mu);margin-bottom:14px">Choose a CSV with columns: Full Name, Phone, Email, Company, Lead Source, Status, Follow-up Date, Notes.</p><input type="file" id="imp" accept=".csv,text/csv"> <button class="btn s" id="tpl" style="margin-top:10px">Download blank template</button></div>
+ <div class="card"><h3>WhatsApp country code</h3><p style="color:var(--mu);margin-bottom:14px">Added to phone numbers without one (10 digits or fewer).</p><input id="cc" value="${esc(cc())}" inputmode="numeric" style="background:var(--inp);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;width:100px"> <button class="btn s" id="ccs">Save</button></div>
+ <div class="card"><h3>Delete all data</h3><p style="color:var(--mu);margin-bottom:14px">Permanently remove every lead from this device.</p><button class="btn d" id="wipe">Delete all leads</button></div></div>`}
+
+const HDR=["Full Name","Phone","Email","Company","Lead Source","Status","Follow-up Date","Notes"];
+const csvCell=v=>{v=String(v==null?"":v);return/[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+function download(name,txt){const b=new Blob(["\ufeff"+txt],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function exportCSV(){if(!leads.length)return toast("No leads to export yet.");download("leadflow-leads-"+todayStr()+".csv",[HDR.map(csvCell).join(",")].concat(leads.map(l=>[l.name,l.phone,l.email,l.company,l.source,l.status,l.followup,l.notes].map(csvCell).join(","))).join("\r\n"))}
+function parseCSV(t){t=t.replace(/^\ufeff/,"");const rows=[];let r=[],f="",inq=false;for(let i=0;i<t.length;i++){const c=t[i];if(inq){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else inq=false}else f+=c}else if(c==='"')inq=true;else if(c===","){r.push(f);f=""}else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;r.push(f);f="";rows.push(r);r=[]}else f+=c}
+ if(f!==""||r.length){r.push(f);rows.push(r)}return rows.filter(x=>x.some(v=>v.trim()!==""))}
+function importCSV(file){const rd=new FileReader();rd.onload=()=>{const rows=parseCSV(String(rd.result));if(rows.length<2)return toast("The file has no lead rows.");
+ const h=rows[0].map(x=>x.trim().toLowerCase().replace(/[^a-z]/g,""));const ix=k=>h.findIndex(x=>k.includes(x));
+ const m={name:ix(["fullname","name"]),phone:ix(["phone","mobile"]),email:ix(["email"]),company:ix(["company"]),source:ix(["leadsource","source"]),status:ix(["status"]),followup:ix(["followupdate","followup"]),notes:ix(["notes"])};
+ if(m.name<0||m.phone<0)return toast("CSV needs Full Name and Phone columns.");
+ let n=0,skip=0;rows.slice(1).forEach(r=>{const g=k=>m[k]>=0?(r[m[k]]||"").trim():"";const name=g("name"),phone=g("phone");if(!name||!phone){skip++;return}
+ const st=STATUS.find(s=>s.toLowerCase()===g("status").toLowerCase())||"New";let fd=g("followup");if(fd&&!/^\d{4}-\d{2}-\d{2}$/.test(fd)){const d=new Date(fd);fd=isNaN(d)?"":d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+ leads.push({id:uid(),name,phone,email:g("email"),company:g("company"),source:g("source")||"Other",status:st,followup:fd,notes:g("notes"),created:new Date().toISOString()});n++});
+ save();render();toast("Imported "+n+" lead"+(n==1?"":"s")+(skip?", skipped "+skip:""))};rd.readAsText(file)}
+
+const TITLES={dashboard:"Dashboard",leads:"All leads",followups:"Follow-ups",data:"Import & export"};
+function render(){
+ $("#title").textContent=TITLES[view];
+ document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===view));
+ const od=leads.filter(isLate).length,b=$("#ovb");b.hidden=!od;b.textContent=od;
+ $("#view").innerHTML=view==="dashboard"?dashboard():view==="leads"?leadsView():view==="followups"?followView():dataView();
+ if(view==="leads")$("#tbl").innerHTML=tableHTML();
+}
+function go(v){view=v;$("#side").classList.remove("open");render();scrollTo(0,0)}
+
+function openForm(id){editId=id||null;const l=leads.find(x=>x.id===id)||{};const f=$("#form");
+ f.source.innerHTML=SOURCES.map(s=>`<option>${s}</option>`).join("");f.status.innerHTML=STATUS.map(s=>`<option>${s}</option>`).join("");
+ f.name.value=l.name||"";f.phone.value=l.phone||"";f.email.value=l.email||"";f.company.value=l.company||"";f.source.value=l.source||"Website";f.status.value=l.status||"New";f.followup.value=l.followup||"";f.notes.value=l.notes||"";
+ $("#fTitle").textContent=id?"Edit lead":"Add lead";$("#formOv").classList.add("show");setTimeout(()=>f.name.focus(),50)}
+const closeForm=()=>$("#formOv").classList.remove("show");
+
+$("#form").addEventListener("submit",e=>{e.preventDefault();const f=e.target;
+ const d={name:f.name.value.trim(),phone:f.phone.value.trim(),email:f.email.value.trim(),company:f.company.value.trim(),source:f.source.value,status:f.status.value,followup:f.followup.value,notes:f.notes.value.trim()};
+ if(!d.name||!d.phone)return toast("Name and phone are required.");
+ if(editId){Object.assign(leads.find(x=>x.id===editId),d);toast("Lead updated")}else{leads.push(Object.assign({id:uid(),created:new Date().toISOString()},d));toast("Lead added")}
+ save();closeForm();render()});
+$("#cancel").onclick=closeForm;
+$("#formOv").addEventListener("mousedown",e=>{if(e.target.id==="formOv")closeForm()});
+$("#addBtn").onclick=()=>openForm();
+$("#nav").addEventListener("click",e=>{const b=e.target.closest("button");if(b)go(b.dataset.v)});
+$("#ham").onclick=()=>$("#side").classList.add("open");
+$("#bk").onclick=()=>$("#side").classList.remove("open");
+
+let confirmFn=null;
+function confirmBox(msg,yes,fn){$("#confTx").textContent=msg;$("#confYes").textContent=yes;confirmFn=fn;$("#confOv").classList.add("show")}
+$("#confNo").onclick=()=>$("#confOv").classList.remove("show");
+$("#confYes").onclick=()=>{$("#confOv").classList.remove("show");if(confirmFn)confirmFn()};
+
+document.addEventListener("click",e=>{
+ const ed=e.target.closest("[data-edit]"),dl=e.target.closest("[data-del]");
+ if(ed)openForm(ed.dataset.edit);
+ if(dl){const l=leads.find(x=>x.id===dl.dataset.del);if(l)confirmBox("“"+l.name+"” will be permanently removed. This cannot be undone.","Delete lead",()=>{leads=leads.filter(x=>x.id!==l.id);save();render();toast("Lead deleted")})}
+ const id=e.target.id;
+ if(id==="exp")exportCSV();
+ if(id==="tpl")download("leadflow-template.csv",HDR.join(",")+"\r\n");
+ if(id==="ccs"){const v=$("#cc").value.replace(/\D/g,"");if(!v)return toast("Enter a country code, e.g. 91");localStorage.setItem(CK,v);toast("Country code saved")}
+ if(id==="wipe"){if(!leads.length)return toast("There are no leads to delete.");confirmBox("All "+leads.length+" leads will be permanently deleted from this device.","Delete all",()=>{leads=[];save();render();toast("All leads deleted")})}
+});
+document.addEventListener("input",e=>{const id=e.target.id;
+ if(id==="q"){q=e.target.value;$("#tbl").innerHTML=tableHTML()}});
+document.addEventListener("change",e=>{const id=e.target.id;
+ if(id==="fs"||id==="fsrc"||id==="fu"){if(id==="fs")fs=e.target.value;if(id==="fsrc")fsrc=e.target.value;if(id==="fu")fu=e.target.value;$("#tbl").innerHTML=tableHTML()}
+ if(id==="imp"&&e.target.files[0]){importCSV(e.target.files[0]);e.target.value=""}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeForm();$("#confOv").classList.remove("show")}});
+
+function setTheme(t){document.documentElement.dataset.theme=t;$("#theme").textContent=t==="dark"?"☀️":"🌙";try{localStorage.setItem(TK,t)}catch(e){}}
+$("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+let t0;try{t0=localStorage.getItem(TK)}catch(e){}
+setTheme(t0||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+load();render();
+setInterval(()=>{if(!$("#formOv").classList.contains("show")&&view!=="data"&&document.activeElement.tagName!=="INPUT")render()},600000);
+})();
+</script>
+</body>
+</html>
